@@ -1,10 +1,12 @@
 package com.urlshortner.service;
 
-import java.net.URL;
+import com.urlshortner.dto.OriginalUrl;
+import com.urlshortner.dto.ShortUrl;
+
 
 public interface URLShortService {
 
-    String shortUrl(URL fullUrl);
-    String fullUrl(URL shortUrl);
+    ShortUrl createShortUrl(String fullUrl);
+    OriginalUrl getFullUrl(String shortUrl) throws Exception;
 
 }
