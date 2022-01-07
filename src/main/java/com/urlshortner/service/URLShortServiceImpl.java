@@ -25,6 +25,7 @@ public class URLShortServiceImpl implements URLShortService {
 
     @Override
     public ShortUrl createShortUrl(String fullUrl) {
+        logger.info("Creating short url for {}",fullUrl);
         Optional<URLEntity> urlEntity = getByFullUrl(fullUrl);
         if(urlEntity.isPresent()){
             logger.info("URL already exits in Db");
@@ -37,7 +38,7 @@ public class URLShortServiceImpl implements URLShortService {
     }
 
     private Optional<URLEntity> getByFullUrl(String fullUrl) {
-        logger.info("retrieving url from db by entity");
+        logger.info("retrieving url from db by fullUrl");
         return urlRepo.findByFullUrl(fullUrl);
     }
 
@@ -48,6 +49,7 @@ public class URLShortServiceImpl implements URLShortService {
 
     @Override
     public OriginalUrl getFullUrl(String shortUrl) throws Exception {
+        logger.info("Retrieving fullUrl for {}",shortUrl);
         Long urlId = urlUtility.getId(shortUrl);
         logger.info("retrieving url from db");
         return new OriginalUrl(getFromId(urlId).orElseThrow( ()-> new Exception("not mapped to any url") ).getFullUrl());
