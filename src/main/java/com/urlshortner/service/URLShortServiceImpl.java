@@ -29,12 +29,16 @@ public class URLShortServiceImpl implements URLShortService {
         Optional<URLEntity> urlEntity = getByFullUrl(fullUrl);
         if(urlEntity.isPresent()){
             logger.info("URL already exits in Db");
-            return new ShortUrl(urlUtility.getShortUrl(urlEntity.get().getUrlId()));
+            return new ShortUrl(urlUtility.addPrefix(urlUtility.getShortUrl(urlEntity.get().getUrlId())));
         }
         else{
             logger.info("Saving url in db");
-            return new ShortUrl(urlUtility.getShortUrl(urlRepo.save(new URLEntity(fullUrl)).getUrlId()));
+            return new ShortUrl(urlUtility.addPrefix(urlUtility.getShortUrl(saveUrl(fullUrl).getUrlId())));
         }
+    }
+
+    private URLEntity saveUrl(String fullUrl){
+        return urlRepo.save(new URLEntity(fullUrl));
     }
 
     private Optional<URLEntity> getByFullUrl(String fullUrl) {
@@ -50,8 +54,18 @@ public class URLShortServiceImpl implements URLShortService {
     @Override
     public OriginalUrl getFullUrl(String shortUrl) throws Exception {
         logger.info("Retrieving fullUrl for {}",shortUrl);
-        Long urlId = urlUtility.getId(shortUrl);
-        logger.info("retrieving url from db");
-        return new OriginalUrl(getFromId(urlId).orElseThrow( ()-> new Exception("not mapped to any url") ).getFullUrl());
+        if(isUrlValid(shortUrl)) {
+            Long urlId = urlUtility.getId(urlUtility.removePrefix(shortUrl));
+            logger.info("retrieving url from db");
+            return new OriginalUrl(getFromId(urlId).orElseThrow(() -> new Exception("not mapped to any url")).getFullUrl());
+        }
+        else{
+            throw new Exception("URL is not valid");
+        }
+    }
+
+    private boolean isUrlValid(String shortUrl) {
+        logger.info("Checking if url is valid");
+        return urlUtility.checkIfValidUrl(shortUrl);
     }
 }
