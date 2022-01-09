@@ -1,6 +1,9 @@
 package com.urlshortner.dto;
 
-public class OriginalUrl {
+
+import java.io.Serializable;
+
+public class OriginalUrl implements Serializable {
 
     private String originalUrl;
 

@@ -1,6 +1,10 @@
 package com.urlshortner.dto;
 
-public class ShortUrl {
+
+
+import java.io.Serializable;
+
+public class ShortUrl implements Serializable {
 
     private String shortUrl;
 

@@ -3,11 +3,13 @@ package com.urlshortner.service;
 import com.urlshortner.dto.OriginalUrl;
 import com.urlshortner.dto.ShortUrl;
 import com.urlshortner.entity.URLEntity;
+
 import com.urlshortner.repo.UrlRepo;
 import com.urlshortner.utility.URLUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -23,6 +25,7 @@ public class URLShortServiceImpl implements URLShortService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
+    @Cacheable(value = "shortUrls", key = "#fullUrl")
     @Override
     public ShortUrl createShortUrl(String fullUrl) {
         logger.info("Creating short url for {}",fullUrl);
@@ -51,6 +54,7 @@ public class URLShortServiceImpl implements URLShortService {
         return urlRepo.findById(id);
     }
 
+    @Cacheable(value = "originalUrls", key = "#shortUrl")
     @Override
     public OriginalUrl getFullUrl(String shortUrl) throws Exception {
         logger.info("Retrieving fullUrl for {}",shortUrl);
