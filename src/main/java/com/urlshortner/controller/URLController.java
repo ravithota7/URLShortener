@@ -6,15 +6,15 @@ import com.urlshortner.service.URLShortService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
-@RequestMapping(path = "urly")
+@RequestMapping(path = "urlly")
 public class URLController {
 
     @Autowired
@@ -34,7 +34,14 @@ public class URLController {
     public ResponseEntity<OriginalUrl> getOriginalUrl(@RequestBody ShortUrl shortUrl) throws Exception {
         logger.info("Entered getOriginalUrl of {} with shortUrl {}",this.getClass(),shortUrl.getShortUrl());
         return new ResponseEntity<>(urlShortService.getFullUrl(shortUrl.getShortUrl()),HttpStatus.OK);
-        //return ResponseEntity.ok(urlShortService.getFullUrl(shortUrl.getShortUrl()));
+    }
+
+    @GetMapping(path = "{shortUrl}")
+    public ResponseEntity<Object> redirectToUrl(@PathVariable("shortUrl") String shortUrl) throws Exception{
+        logger.info("Entered redirectToUrl of {} with shortUrl {}",this.getClass(),shortUrl);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(urlShortService.redirectToOriginalUrl(shortUrl).getOriginalUrl()));
+        return new ResponseEntity<>(headers,HttpStatus.MOVED_PERMANENTLY);
     }
 
 }

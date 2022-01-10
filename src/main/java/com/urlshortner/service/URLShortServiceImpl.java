@@ -68,6 +68,14 @@ public class URLShortServiceImpl implements URLShortService {
         }
     }
 
+    @Cacheable(value = "originalUrls", key = "#shortUrl")
+    @Override
+    public OriginalUrl redirectToOriginalUrl(String shortUrl) throws Exception {
+        logger.info("Redirecting to original url from given shortUrl {}",shortUrl);
+        Long urlId = urlUtility.getId(shortUrl);
+        return new OriginalUrl(getFromId(urlId).orElseThrow(() -> new Exception("not mapped to any url")).getFullUrl());
+    }
+
     private boolean isUrlValid(String shortUrl) {
         logger.info("Checking if url is valid");
         return urlUtility.checkIfValidUrl(shortUrl);

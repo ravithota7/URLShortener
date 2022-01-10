@@ -10,8 +10,8 @@ public class URLUtility {
     private static String KEY = "Mlp0PLmZaq1QAzXsw2WSxCde3EDcVfr4RFvBgt5TGbNhy6YHnJu7UjKi8Iko9O";
     private static int BASE = KEY.length();
 
-    private static final String HTTPS_PREFIX = "https://urlly.";
-    private static final String HTTP_PREFIX = "http://urlly.";
+    private static final String HTTPS_PREFIX = "https://localhost:8080/urlly/";
+    private static final String HTTP_PREFIX = "http://localhost:8080/urlly/";
 
 
     public String getShortUrl(Long num) {
@@ -34,14 +34,14 @@ public class URLUtility {
     }
 
     public String addPrefix(String url){
-        return HTTPS_PREFIX+url;
+        return HTTP_PREFIX+url;
     }
 
     public String removePrefix(String url){
         if(url.startsWith(HTTP_PREFIX))
-            return url.substring(13);
+            return url.substring(28);
         else
-            return url.substring(14);
+            return url.substring(29);
     }
 
     public boolean checkIfValidUrl(String url){
