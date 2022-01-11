@@ -8,5 +8,5 @@ public interface URLShortService {
 
     ShortUrl createShortUrl(String fullUrl);
     OriginalUrl getFullUrl(String shortUrl) throws Exception;
-
+    OriginalUrl redirectToOriginalUrl(String shortUrl) throws Exception;
 }

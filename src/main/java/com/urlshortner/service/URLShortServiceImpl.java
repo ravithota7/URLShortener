@@ -25,7 +25,7 @@ public class URLShortServiceImpl implements URLShortService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
-    @Cacheable(value = "shortUrls", key = "#fullUrl")
+//    @Cacheable(value = "shortUrls", key = "#fullUrl")
     @Override
     public ShortUrl createShortUrl(String fullUrl) {
         logger.info("Creating short url for {}",fullUrl);
@@ -54,7 +54,7 @@ public class URLShortServiceImpl implements URLShortService {
         return urlRepo.findById(id);
     }
 
-    @Cacheable(value = "originalUrls", key = "#shortUrl")
+//    @Cacheable(value = "originalUrls", key = "#shortUrl")
     @Override
     public OriginalUrl getFullUrl(String shortUrl) throws Exception {
         logger.info("Retrieving fullUrl for {}",shortUrl);
@@ -66,6 +66,13 @@ public class URLShortServiceImpl implements URLShortService {
         else{
             throw new Exception("URL is not valid");
         }
+    }
+
+    @Override
+    public OriginalUrl redirectToOriginalUrl(String shortUrl) throws Exception {
+        logger.info("Redirecting to original url from given shortUrl {}",shortUrl);
+        Long urlId = urlUtility.getId(shortUrl);
+        return new OriginalUrl(getFromId(urlId).orElseThrow(() -> new Exception("not mapped to any url")).getFullUrl());
     }
 
     private boolean isUrlValid(String shortUrl) {
