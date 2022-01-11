@@ -33,7 +33,7 @@ public class ServiceSuccessTest {
         URLEntity urlEntity = new URLEntity(1L,"https://mail.google.com");
         OriginalUrl originalUrl = new OriginalUrl("https://mail.google.com");
 
-        Mockito.when(urlRepo.save(urlEntity)).thenReturn(urlEntity);
+        Mockito.when(urlRepo.saveAndFlush(urlEntity)).thenReturn(urlEntity);
         Mockito.when(urlRepo.findById(1L)).thenReturn(Optional.of(urlEntity));
         Mockito.when(urlRepo.findByFullUrl(originalUrl.getOriginalUrl())).thenReturn(Optional.of(urlEntity));
     }

@@ -41,7 +41,7 @@ public class URLShortServiceImpl implements URLShortService {
     }
 
     private URLEntity saveUrl(String fullUrl){
-        return urlRepo.save(new URLEntity(fullUrl));
+        return urlRepo.saveAndFlush(new URLEntity(fullUrl));
     }
 
     private Optional<URLEntity> getByFullUrl(String fullUrl) {
